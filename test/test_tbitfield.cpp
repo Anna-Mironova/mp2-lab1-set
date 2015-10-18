@@ -13,6 +13,11 @@ TEST(TBitField, can_get_length)
 
   EXPECT_EQ(3, bf.GetLength());
 }
+TEST(TBitField,can_get_MemLen)
+{
+	TBitField bf(100);
+	EXPECT_EQ((100+sizeof(TELEM)-1)/sizeof(TELEM),bf.GetMemLen());
+}
 
 TEST(TBitField, new_bitfield_is_set_to_zero)
 {

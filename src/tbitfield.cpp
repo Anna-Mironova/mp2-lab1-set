@@ -81,6 +81,10 @@ int TBitField::GetBit(const int n) const // получить значение б
 	else 
 		return pMem[GetMemIndex(n)]& GetMemMask(n);
 }
+int TBitField::GetMemLen()const
+{
+	return MemLen;
+}
 
 // битовые операции
 
@@ -106,13 +110,12 @@ int TBitField::operator==(const TBitField &bf) const // сравнение
 		res=0;
 	else 
 	{
-		for (int i=0; i < MemLen - 1;i++)
-			if (pMem[i]!=bf.pMem[i])
+		for (int i=0; i < BitLen ;i++)
+			if (this->GetBit(i)!=bf.GetBit(i))
 			{
 				res=0;
 				break;
 			}
-		// сравнить последний элемент побитово или обеспечить "хороший" "одинаковый" хвост
 	}
 	return res;
 }
@@ -124,9 +127,12 @@ int TBitField::operator!=(const TBitField &bf) const // сравнение
 		return res;
 	else 
 	{
-		for (int i=0; i<MemLen;i++)
-			if (pMem[i]!=bf.pMem[i])
+		for (int i=0; i<BitLen;i++)
+			if (this->GetBit(i)!=bf.GetBit(i))
+			{
+				res=1;
 				break;
+			}
 			else
 				res=0;
 	}
