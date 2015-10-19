@@ -13,7 +13,16 @@ TEST(TBitField, can_get_length)
 
   EXPECT_EQ(3, bf.GetLength());
 }
-
+TEST(TBitField,can_get_memlen)
+{
+	TBitField bf(100);
+	EXPECT_EQ((100+(8*sizeof(TELEM))-1)/(8*sizeof(TELEM)),bf.GetMemLen());
+}
+TEST(TBitField,can_get_memlen_with_limiting_bitlen)
+{
+	TBitField bf(15);
+	EXPECT_EQ((15+(8*sizeof(TELEM))-1)/(8*sizeof(TELEM)),bf.GetMemLen());
+}
 TEST(TBitField, new_bitfield_is_set_to_zero)
 {
   TBitField bf(100);

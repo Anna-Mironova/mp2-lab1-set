@@ -14,7 +14,7 @@ TBitField::TBitField(int len)
 	else
 	{
 		BitLen=len;
-		MemLen=(len+sizeof(TELEM)-1)/sizeof(TELEM);
+		MemLen=(len+(8*sizeof(TELEM))-1)/(8*sizeof(TELEM));
 		pMem=new TELEM[MemLen];
 		for (int i=0;i<MemLen;i++)
 			pMem[i]=0;
@@ -37,12 +37,12 @@ TBitField::~TBitField()
 
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
 {
-	return n/sizeof(TELEM);
+	return n/(8*sizeof(TELEM));
 }
 
 TELEM TBitField::GetMemMask(const int n) const // битовая маска для бита n
 {
-	return 1<<(n%sizeof(TELEM));
+	return 1<<(n%(8*sizeof(TELEM)));
 }
 
 // доступ к битам битового поля
@@ -81,6 +81,10 @@ int TBitField::GetBit(const int n) const // получить значение б
 	else 
 		return pMem[GetMemIndex(n)]& GetMemMask(n);
 }
+int TBitField::GetMemLen()const
+{
+	return MemLen;
+}
 
 // битовые операции
 
@@ -106,13 +110,12 @@ int TBitField::operator==(const TBitField &bf) const // сравнение
 		res=0;
 	else 
 	{
-		for (int i=0; i < MemLen - 1;i++)
-			if (pMem[i]!=bf.pMem[i])
+		for (int i=0; i < BitLen ;i++)
+			if (this->GetBit(i)!=bf.GetBit(i))
 			{
 				res=0;
 				break;
 			}
-		// сравнить последний элемент побитово или обеспечить "хороший" "одинаковый" хвост
 	}
 	return res;
 }
@@ -124,9 +127,12 @@ int TBitField::operator!=(const TBitField &bf) const // сравнение
 		return res;
 	else 
 	{
-		for (int i=0; i<MemLen;i++)
-			if (pMem[i]!=bf.pMem[i])
+		for (int i=0; i<BitLen;i++)
+			if (this->GetBit(i)!=bf.GetBit(i))
+			{
+				res=1;
 				break;
+			}
 			else
 				res=0;
 	}
